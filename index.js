@@ -8,12 +8,29 @@ app.use(express.static(__dirname + '/public'));
 
 app.use(bodyParser.urlencoded({ extended: true}));
 
-var phrases = [];
+var phrases = [
+	{id: 0, word: "Alan Turing", definition: "Genius computer scientist from WWII"},
+	{id: 1, word: "GUI", defintion: "Graphic User Interface"},
+	{id: 2, word: "Github", defintion: "Public repsitory for programming projects"},
+	{id: 3, word: "D3", defintion: "Javascript data visulization library"}
+];
 
 app.get("/", function (req, res) {
-	res.send("Hello World");
+	res.sendFile(process.cwd() + "/public/html/index.html");
+});
+
+app.get("/phrases", function (req, res) {
+	res.send(phrases);
+});
+
+
+app.get("/", function (req, res) {
+	var tmpl_str = $("#tmpl-loop").html();
+	var compile = _.template(tmpl_str);
+	var html_st = compile(phrases);
+	$("body").html(html_st);
 });
 
 app.listen(3000, function (req, res) {
-	console.log("working!!")
+	console.log("port 3000 yo")
 });
