@@ -1,12 +1,16 @@
 var express = require("express");
 var app = express();
 var path = require("path");
+// var db = require("./models");
 var _ = require("underscore");
 var bodyParser = require("body-parser");
 
 app.use(express.static(__dirname + '/public'));
 
 app.use(bodyParser.urlencoded({ extended: true}));
+app.use(bodyParser.urlencoded({extended: true}));
+app.use(express.static("public"));
+app.use(express.static("bower_components"));
 
 var phrases = [
 	{id: 0, word: "Alan Turing", definition: "Genius computer scientist from WWII"},
@@ -24,11 +28,19 @@ app.get("/phrases", function (req, res) {
 });
 
 
-app.get("/", function (req, res) {
-	var tmpl_str = $("#tmpl-loop").html();
-	var compile = _.template(tmpl_str);
-	var html_st = compile(phrases);
-	$("body").html(html_st);
+app.post("/phrases", function (req, res){
+  var newPhrase = req.body;
+  newPhrase.id = phrases[phrases.length - 1].id + 1;
+  phrases.push(newPhrase);
+  res.send(JSON.stringify(newPhrase));
+});
+
+app.delete("/phrases/:id", function (req, res){
+  var targetId = parseInt(req.params.id, 10);
+  var targetItem = _.findWhere(phrases, {id: targetId});
+  var index = phrases.indexOf(targetItem);
+  phrases.splice(index, 1);
+  res.send(JSON.stringify(targetItem));
 });
 
 app.listen(3000, function (req, res) {

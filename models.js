@@ -9,7 +9,7 @@ var phraseSchema = new mongoose.Schema({
     type: String,
     default: ""
   },
-  description: {
+  definition: {
     type: String,
     default: ""
   },
