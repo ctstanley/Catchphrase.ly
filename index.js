@@ -32,6 +32,7 @@ app.post("/phrases", function (req, res){
   var newPhrase = req.body;
   newPhrase.id = phrases[phrases.length - 1].id + 1;
   phrases.push(newPhrase);
+  console.log(newPhrase);
   res.send(JSON.stringify(newPhrase));
 });
 
