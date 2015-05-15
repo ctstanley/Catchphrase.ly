@@ -1,12 +1,19 @@
 $(function () {
-  alert("The Page Has Loaded!");
-  $.get("/phrases", function(data){
-  	$(".result").html(data);
-  	console.log(data);	
-  });
+  Phrases.all();
 });
 
-// var tmpl_str = $("#tmpl-loop").html();
-// 	var compile = _.template(tmpl_str);
-// 	var html_st = compile(phrases);
-// 	$("body").html(html_st);
+
+function View() {};
+View.render = function(items, parentId, templateId) {
+  var template = _.template($("#" + templateId).html());
+  $("#" + parentId).html(template({collection: items}));
+  console.log(items);
+};
+
+function Phrases() {};
+Phrases.all = function() {
+  $.get("/phrases", function(res){ 
+    var phrases = JSON.parse(res);
+    View.render(phrases, "phrases-ul", "phrases-template");
+  });
+};

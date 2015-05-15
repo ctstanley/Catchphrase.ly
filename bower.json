@@ -1,0 +1,23 @@
+{
+  "name": "Catchphrase.ly",
+  "main": "index.js",
+  "version": "0.0.0",
+  "homepage": "https://github.com/ctstanley/Catchphrase.ly",
+  "authors": [
+    "Connor Stanley"
+  ],
+  "description": "project",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "~2.1.4",
+    "bootstrap": "~3.3.4",
+    "underscore": "~1.8.3"
+  }
+}
