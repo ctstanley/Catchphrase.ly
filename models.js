@@ -1,11 +1,8 @@
 var mongoose = require("mongoose");
-mongoose.connect("mongodb://localhost/todos_app");
-
-var mongoose = require("mongoose");
-mongoose.connect("mongodb://localhost/todos_app");
+mongoose.connect("mongodb://localhost/phrases_app");
 
 var phraseSchema = new mongoose.Schema({
-  title: {
+  word: {
     type: String,
     default: ""
   },

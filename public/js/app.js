@@ -1,49 +1,44 @@
 $(function() {
-    Phrases.all();
-    View.init();
-});
+    var $newPhrase = $("#phrase-form");
+    var $phraseUl = $("#phraseUl");
+    var phrases = [];
 
-function View() {};
+    var phraseTemp = _.template($("#phrases-template").html());
 
-View.init = function() {
-    $("#phrase-form").on("submit", function(e) {
+    $.get("/phrases").done(function (phrases) {
+        _(phrases).each(function (phrase) {
+            var $phrase = $(phraseTemp(phrase));
+            $phrase.data("_id", phrase._id);
+            $phraseUl.append($phrase);
+        });
+    });
+
+    $newPhrase.on("submit", function (e) {
         e.preventDefault();
-        var phraseParams = $(this).serialize();
-        Phrases.create(phraseParams);
-    });
-}
-View.render = function(items, parentId, templateId) {
-    var template = _.template($("#" + templateId).html());
-    $("#" + parentId).html(template({
-        collection: items
-    }));
-    console.log(items);
-};
 
-function Phrases() {};
-Phrases.all = function() {
-    $.get("/phrases", function(res) {
-        var phrases = JSON.parse(res);
-        View.render(phrases, "phrases-ul", "phrases-template");
-    });
-};
+        var phraseData = $newPhrase.serialize();
 
-Phrases.create = function(phraseParams) {
-    $.post("/phrases", phraseParams).done(function(res) {
-        Phrases.all();
-    }).done(function(res) {
-        $("#phrase-form")[0].reset();
-    });
-}
-Phrases.delete = function(phrase) {
-    var phraseId = $(phrase).data().id;
-    $.ajax({
-        url: '/phrases/' + phraseId,
-        type: 'DELETE',
-        success: function(res) {
-            Phrases.all();
-        }
-    });
-}
+        $.post("/phrases", phraseData).don(function (data) {
+            $newPhrase[0].reset();
+            var $phrase = $(phraseTemp(data));
+            console.log(data);
 
+            $phrase.data("_id", data._id);
+            $phraseUl.append($phrase);
+            phrases.push(data);
+        });
+    });
+
+    $phraseUl.on("click", ".close", function (e) {
+        var $phrase = $(this).closest(".close");
+        var _id = $phrase.data("_id");
+        $.ajax({
+            url: "/phrases/" +_id,
+            type: "DELETE"
+        }).done(function () {
+            $phrase.remove();
+        });
+    });
+
+});
 
